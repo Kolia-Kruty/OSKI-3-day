@@ -1,0 +1,12 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Web.PublishedModels.Article>
+@{
+    Layout = "Master.cshtml";
+}
+
+
+@Html.Partial("~/Views/Partials/pageHeader.cshtml")
+
+
+<article class="mb-4">
+    @Html.GetGridHtml(Model, "mainContent")
+</article>

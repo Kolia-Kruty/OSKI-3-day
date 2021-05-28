@@ -1,0 +1,64 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@{
+    var articles = Model.Root().Descendants<Article>()
+        .Where(x => x.IsVisible())
+        .OrderByDescending(y => y.ArticleDate);
+
+    var articleList = Model.Root().Descendants<ArticleList>().FirstOrDefault();
+
+    var isArticleListPage = articleList.Id == Model.Id;
+    var fallbackPageSize = isArticleListPage ? 10 : 3;
+
+    var pageNumber = 1;
+    var pageSize = fallbackPageSize;
+
+    var pageOfArticles = articles.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+    var totalItemCount = articles.Count();
+    var pageCount = totalItemCount > 0 ? Math.Ceiling((double)totalItemCount / pageSize) : 1;
+}
+
+@if (articles != null && articles.Any())
+{
+
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <!-- Post preview-->
+                @foreach (var article in pageOfArticles)
+                {
+                    <div class="post-preview">
+                        <a href="@article.Url">
+                            <h2 class="post-title">
+                                @(!string.IsNullOrWhiteSpace(article.Title) ? article.Title : article.Name)
+                            </h2>
+                            @if (!string.IsNullOrWhiteSpace(article.Subtitle))
+                            {
+
+                                <h3 class="post-subtitle">
+                                    @article.Subtitle
+                                </h3>
+                            }
+                        </a>
+                        <p class="post-meta">
+                            Posted
+                            @if (!string.IsNullOrWhiteSpace(article.AuthorName))
+                            {
+                                @Html.Raw("by ") @article.AuthorName
+                            }
+                            on @article.ArticleDate.ToString("MMMM dd, yyyy")
+                        </p>
+                    </div>
+                    <hr class="my-4" />
+                }
+
+
+                <!-- Pager-->
+                <div class="d-flex justify-content-end mb-4">
+                    <a class="btn btn-primary text-uppercase" href="@articleList.Url">Older Posts →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

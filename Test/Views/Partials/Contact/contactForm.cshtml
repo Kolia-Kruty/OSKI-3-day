@@ -1,0 +1,66 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Test.ViewModels.ContactViewModel>
+
+@using Test.Controllers
+
+<style>
+    .field-validation-error {
+        color: #f00;
+        font-size: 16px;
+        text-decoration: underline;
+    }
+
+    .input-validation-error {
+        border: 1px solid #006699;
+        background-color: silver;
+    }
+</style>
+
+<div class="my-5" id="form-outer">
+
+    @using (Html.BeginUmbracoForm("SubmitForm", "ContactSurface", Model, new { @class = "contact__form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.ContactFromId)
+
+        <div class="form-floating">
+            <input class="form-control" id="inputName" type="text" name="Name" value="@(Model?.Name ?? "")"
+                   placeholder="Enter your name..." />
+            <label for="inputName">Name</label>
+
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        <div class="form-floating">
+            <input class="form-control" id="inputEmail" type="email" name="Email" value="@(Model?.Email ?? "")"
+                   placeholder="Enter your email..." />
+            <label for="inputEmail">Email address</label>
+            @*@Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter your email..." })*@
+            @Html.ValidationMessageFor(m => m.Email)
+
+        </div>
+
+        <div class="form-floating">
+            <textarea class="form-control" id="inputMessage" placeholder="Enter your message here..." style="height: 12rem" name="Message">@(Model?.Message ?? "")</textarea>
+            <label for="Message">Message</label>
+            @*@(Html.TextAreaFor(m => m.Message, new {@class = "form-control",
+                placeholder = "Enter your message here...", rows = 6 }))*@
+            @Html.ValidationMessageFor(m => m.Message)
+
+
+        </div>
+        <br />
+        <button class="btn btn-primary text-uppercase" type="submit">
+            Send
+        </button>
+    }
+
+
+
+</div>
+@if (TempData["InfoMessageHtml"] != null)
+{
+    <div id="form-result" style="border: 1px solid #ccc; text-align: center; background: #006699">
+        @Html.Raw(TempData["InfoMessageHtml"])
+    </div>
+}
+
+

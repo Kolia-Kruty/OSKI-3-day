@@ -18,6 +18,8 @@ namespace Test.Controllers
     public class ContactSurfaceController : SurfaceController
     {
         private readonly ILogger logger;
+
+
         public ContactSurfaceController(ILogger logger)
         {
             this.logger = logger;
